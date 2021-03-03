@@ -1,0 +1,64 @@
+{
+  "scenarioName": "validating arrays",
+  "steps": [
+    {
+      "name": "validate_array_with_matchers",
+      "url": "/books",
+      "method": "GET",
+      "request": {},
+      "assertions": {
+        "body": {
+          "books" : [ {
+            "title" : "The Robotics",
+            "author" : "author2"
+          }, {
+            "title" : "Science",
+            "author" : "author3"
+          }, {
+            "title" : "Ancient History",
+            "author" : "author1"
+          } ]
+        }
+      }
+    },
+    {
+      "name": "validate_element_on_specific_index_with_validators",
+      "url": "/books",
+      "method": "GET",
+      "request": {},
+      "validators": [
+        {
+          "field": "$.body.books[1].title",
+          "value": "Science"
+        }
+      ]
+    },
+    {
+      "name": "validate_existence_of_element_in_array",
+      "url": "/books",
+      "method": "GET",
+      "request": {},
+      "validators": [
+        {
+          "field": "$.body.books[?(@.title == 'Ancient History')]",
+          "value": [
+            {
+              "title": "Ancient History",
+              "author": "author1"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "validate count of books with the help of java method",
+      "url": "ge.dvali.zerocodedemo.Utils",
+      "method": "getCount",
+      "request": {
+          "title": "The Robotics",
+          "books": "${$.validate_existence_of_element_in_array.response.body.books}"
+      },
+      "verify": 2
+    }
+  ]
+}
